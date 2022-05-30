@@ -39,32 +39,47 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-## Learn More
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Problem Description:
+Create a web page that takes the attached csv file as an input and parses it to render the required data in a tabular format and also generate charts for specific metrics.
+The attached csv file contains inventory records, which need to be grouped by product name. Each product will have multiple batches and each batch may have different values for the following columns : stock, deal, free, mrp, rate and expiry. 
+### Part - 1
+Display the inventory records in a table with the following columns : name, batch, stock, deal, free, mrp, rate, expiry date and company. The table has to be paginated and searchable on name. 
+If there are multiple batches for a product, the batch cell needs to have a dropdown to select and view the corresponding batch details in the stock, deal, free, mrp, rate, expiry date columns. By default, the aggregated details need to be displayed. 
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### The aggregation logic is as follows :
+1.	Stock - summation across batches
+2.	Deal and Free - minimum free/deal ratio across batches
+3.	MRP - maximum across batches
+4.	Rate - maximum across batches
+5.	Expiry Date - nearest date across batches
 
-### Code Splitting
+### Sample Input :
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+name	batch	stock	deal	free	mrp	rate	exp
+1-AL 5MG TABS ***	079K025	150	0	0	26.2	18.71	01/10/2021
+1-AL 5MG TABS ***	079L030	25	0	0	26.2	18.71	01/11/2021
+1-AL 5MG TABS ***	079K024	-25	0	0	26.2	18.72	01/10/2021
+1-AL 5MG TABS ***	079K025	5	0	0	26.2	18.72	01/10/2021
 
-### Analyzing the Bundle Size
+### Aggregated Output :
+name	batch	stock	deal	free	mrp	rate	exp
+1-AL 5MG TABS ***	All	155	0	0	26.2	18.72	01/10/2021
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Batch Wise Output :
+name	batch	stock	deal	free	mrp	rate	exp
+1-AL 5MG TABS ***	079K025	150	0	0	26.2	18.71	01/10/2021
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## Part - 2
+### Create charts for the following metrics using the same inventory data :
+1.	Individual company wise comparison of expired to not expired products
+a.	Input : Single select - company name 
+b.	Output : Single pie Chart
+2.	Company wise comparison of products expiring by a certain date
+a.	Input : Single select - company name, Date selection
+b.	Output : Bar graph with product names on x-axis and aggregated count on y-axis
+Points To Notes
+1.	This  is a pure frontend assignment, the csv should be read from the file system, no network calls are required.
+2.	We are just looking for a very simple one webpage solution which satisfies the above problem statement.
+3.	You can use any programming language, framework and libraries to solve the problem.
+4.	Extra points will be given to cleaner code structure, variable namings etc good practices.
