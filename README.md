@@ -39,6 +39,9 @@ Instead, it will copy all the configuration files and the transitive dependencie
 
 You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
+## Download File and Upload to System:
+
+[Click Here Download](https://github.com/sanjeevbomma/inventory-records/blob/main/src/assets/Sample_Inventory.xlsx)
 
 ## Problem Description:
 Create a web page that takes the attached csv file as an input and parses it to render the required data in a tabular format and also generate charts for specific metrics.
