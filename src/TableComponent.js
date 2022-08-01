@@ -4,10 +4,11 @@ import DataTable from 'react-data-table-component';
 function TableComponent(props) {
   const [data, setData] = useState([]);
   const [masterData, setMasterData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
+  const [pageNo, setPageNo] = useState(1);
 
   const groupByName = (items) => {
-    setLoading(true);
+    // setLoading(true);
     var map = new Map(),
       result;
 
@@ -22,7 +23,7 @@ function TableComponent(props) {
 
     setData(result);
     setMasterData(result);
-    setLoading(false);
+    // setLoading(false);
 
   }
 
@@ -86,7 +87,7 @@ function TableComponent(props) {
   ];
 
   const batchListInParent = (items, name) => {
-    const list = [...items];
+    const list = Object.assign([], [...items]);
 
     let batch = list.filter(e => e.name === name && e.batch !== undefined);
 
@@ -100,14 +101,14 @@ function TableComponent(props) {
   }
 
   const stockCalc = (items, name) => {
-    const list = [...items];
+    const list = Object.assign([], [...items]);
 
     return list.filter(i => i.name === name).reduce((a, b) => a + b.stock, 0);
 
   }
 
   const maxRate = (items, name, type) => {
-    const list = [...items];
+    const list = Object.assign([], [...items]);
 
     let rate = list.filter(e => e.name === name);
 
@@ -120,7 +121,7 @@ function TableComponent(props) {
   }
 
   const minFreeDeal = (items, name, type) => {
-    const list = [...items];
+    const list = Object.assign([], [...items]);
 
     let deal = list.filter(e => e.name === name);
 
@@ -168,7 +169,7 @@ function TableComponent(props) {
   }
 
   const newFindClosest = (items, name) => {
-    const list = [...items];
+    const list = Object.assign([], [...items]);
 
     let dates = list.filter(e => e.name === name && !isNaN(new Date(e.exp)));
 
@@ -215,31 +216,33 @@ function TableComponent(props) {
   }
 
   const handleBatch = (row, index, e) => {
-    setLoading(true);
+    // setLoading(true);
 
     if (e.target.value !== 'All') {
-      const mstData = [...masterData];
-      const childList = row.values.find(x => x.batch === e.target.value);
+      const mstData = Object.assign([], [...masterData]);
+      const childList = row.values.find(x => { return x.batch == e.target.value; });
 
-      let newRow = { ...row };
+      let newRow = Object.assign({}, { ...row });
 
       newRow.batch = e.target.value;
-      newRow.stock = childList.stock;
-      newRow.deal = childList.deal;
-      newRow.free = childList.free;
-      newRow.mrp = childList.mrp;
-      newRow.rate = childList.rate;
-      newRow.exp = childList.exp;
+      newRow.stock = childList?.stock;
+      newRow.deal = childList?.deal;
+      newRow.free = childList?.free;
+      newRow.mrp = childList?.mrp;
+      newRow.rate = childList?.rate;
+      newRow.exp = childList?.exp;
 
-      mstData[index] = newRow;
+      let updateIndex = pageNo > 1 ? ((pageNo - 1) * 10) + index : index;
+
+      mstData[updateIndex] = newRow;
 
       setData(mstData);
-      setLoading(false);
+      // setLoading(false);
 
     }
     else {
       setData(masterData);
-      setLoading(false);
+      // setLoading(false);
     }
   }
 
@@ -252,11 +255,14 @@ function TableComponent(props) {
         highlightOnHover={true}
         striped={true}
         title="inventory records"
-        // pagination={true}
+        pagination={true}
         // fixedHeader={true}
         // theme='solarized'
         keyField='id'
-        progressPending={loading}
+        // progressPending={loading}
+        onChangePage={(page, totalRows) => {
+          setPageNo(page);
+        }}
       />
     </>
   );
